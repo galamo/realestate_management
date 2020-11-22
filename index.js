@@ -1,5 +1,5 @@
 // Globals
-const realEstates = []
+let realEstates = []
 
 // const formConfiguration = [ {  id:"image", class:"form-group" ,     }  ]
 
@@ -13,25 +13,41 @@ const DOM = {
 function init(){
     // DOM.saveButton.addEventListener("click",extractDataForm)
     
-    drawImageInput()
-
+    drawInput("Image URL", "image", "Insert Image")
+    drawInput("Address", "address", "Insert address")
+    drawInput("City", "city", "Insert city")
+    drawButton("Save", "save_button", "btn btn-primary", extractDataForm)
+    drawButton("Clear Table", "clear_button", "btn btn-danger", clearData)
 }
 
-function drawImageInput(){
+function drawButton(labelText , id, className,fn){
+    const button = document.createElement("BUTTON")
+    button.innerText = labelText
+    button.id = id
+    button.className = className
+    button.type = "button"
+    button.addEventListener("click",fn)
+    DOM.form.append(button)
+}
+
+function drawInput(labelText , id, placeHolder){
     const div = document.createElement("DIV")
     div.classList.add("form-group")
     const label = document.createElement("LABEL")
-    label.innerText = "Image URL"
+    label.innerText = labelText
     const input = document.createElement("INPUT")
-    input.id = "image"
+    input.id = id
     input.type = "text";
     input.classList.add("form-control");
-    input.placeholder = "generated image..."
+    input.placeholder = placeHolder
     div.append(label,input)
     DOM.form.append(div)
 }
 
-
+function clearData(){
+    clearHTML();
+    realEstates = [];
+}
 function extractDataForm(){
     const address = document.getElementById("address").value;
     const imageURL = document.getElementById("image").value;
@@ -39,22 +55,37 @@ function extractDataForm(){
     draw(realEstates)
 }
 
-function clearData(){
+function clearHTML(){
     DOM.tableBody.innerHTML = "";
 }
 function draw(data){
     if(!Array.isArray(data)) return; // if data is not Array return & stop function
-    clearData()
+    clearHTML()
     const tableRows = data.map(realEstate=>{  return _getRow(realEstate)  })
     DOM.tableBody.append(...tableRows)
     function _getRow(realEstate){
          const tr = document.createElement("TR");
          const tdAddress = _getTD(realEstate.address)
          const tdImage = _getTD(realEstate.imageURL)
-         tr.append(tdAddress,tdImage)
-         return tr;
+        
+         const tdButton = _getTD()
+         tdButton.append(_getDeleteButton())
 
-         function _getTD(data){     
+         tr.append(tdAddress,tdImage,tdButton)
+         return tr;
+         
+         function _getDeleteButton(){
+            const button = document.createElement("BUTTON")
+            button.innerText = "X"
+            button.id = realEstate.address
+            button.className = "btn btn-danger"
+            button.type = "button"
+            button.addEventListener("click",()=>{
+                removeItemFromData(realEstate.address)
+            })
+            return button
+         }
+         function _getTD(data = ""){     
                 const td = document.createElement("TD")
                 td.innerText = data;
                 return td;
@@ -62,5 +93,13 @@ function draw(data){
     }
 }
 
+
+function removeItemFromData(idToRemove){
+    // const index = realEstates.findIndex(item=> item.address === idToRemove)
+    // if(index === -1) return;
+    // realEstates.splice(index,1)
+    realEstates = realEstates.filter(item=> item.address !== idToRemove)
+    draw(realEstates)
+}
 
 init();
