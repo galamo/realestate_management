@@ -27,7 +27,6 @@ function drawImageInput(){
     input.type = "text";
     input.classList.add("form-control");
     input.placeholder = "generated image..."
-
     div.append(label,input)
     DOM.form.append(div)
 }
