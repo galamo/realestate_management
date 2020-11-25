@@ -96,7 +96,10 @@ function draw(data) {
     const tdButton = _getTD();
     tdButton.append(_getDeleteButton());
 
-    tr.append(tdAddress, tdImage, tdButton);
+    const tdButtonEdit = _getTD();
+    tdButtonEdit.append(_getEditButton());
+
+    tr.append(tdAddress, tdImage, tdButton, tdButtonEdit);
     return tr;
 
     function _getDeleteButton() {
@@ -110,12 +113,31 @@ function draw(data) {
       });
       return button;
     }
+    function _getEditButton() {
+      const button = document.createElement("BUTTON");
+      button.innerText = "Edit";
+      button.id = realEstate.address;
+      button.className = "btn btn-warning";
+      button.type = "button";
+      button.addEventListener("click", () => {
+        setFormValues(realEstate);
+      });
+      return button;
+    }
+
     function _getTD(data = "") {
       const td = document.createElement("TD");
       td.innerText = data;
       return td;
     }
   }
+}
+
+function setFormValues(estate) {
+  const addressInput = document.getElementById("address");
+  const imageInput = document.getElementById("image");
+  addressInput.value = estate.address;
+  imageInput.value = estate.imageURL;
 }
 
 function removeItemFromData(idToRemove) {
