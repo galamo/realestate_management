@@ -141,9 +141,6 @@ function setFormValues(estate) {
 }
 
 function removeItemFromData(idToRemove) {
-  // const index = realEstates.findIndex(item=> item.address === idToRemove)
-  // if(index === -1) return;
-  // realEstates.splice(index,1)
   realEstates = realEstates.filter((item) => item.address !== idToRemove);
   draw(realEstates);
 }
